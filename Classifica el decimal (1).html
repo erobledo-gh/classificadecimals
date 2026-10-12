@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Classifica el decimal</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--tx:#1e2433;--mut:#8a90a0;--line:#e2e6ef;--ex:#2e9e6b;--pp:#3b7ddd;--pm:#e08a1e;--ne:#8e5cd9;--bad:#d9534f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141822;--card:#1e2432;--tx:#eef1f8;--mut:#8f97ab;--line:#2c3448}}
+:root[data-theme="dark"]{--bg:#141822;--card:#1e2432;--tx:#eef1f8;--mut:#8f97ab;--line:#2c3448}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;display:flex;justify-content:center}
+.credit{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);right:10px;font-size:11px;color:#999;font-style:italic;z-index:5}
+main{width:100%;max-width:520px;padding:38px 16px 24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 6px 24px rgba(0,0,0,.06)}
+h1{font-size:24px;margin:0 0 6px;text-align:center}
+p{line-height:1.5}
+.sub{color:var(--mut);text-align:center;margin:0 0 16px}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.legend div{font-size:13px;padding:8px 10px;border-radius:10px;border-left:5px solid}
+.legend b{display:block;font-size:13px}
+.legend span{color:var(--mut);font-size:12px}
+.top{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:14px;margin-bottom:10px}
+.pill{background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:4px 12px}
+.bar{height:12px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:6px}
+#fill{height:100%;width:100%;background:var(--ex);border-radius:99px;transition:width .1s linear,background .3s}
+#tm{text-align:center;font-size:28px;font-weight:800;margin:4px 0}
+#num{font-size:clamp(28px,8vw,42px);font-weight:800;text-align:center;padding:26px 6px;margin:8px 0 14px;background:var(--bg);border-radius:16px;word-break:break-all;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{font:inherit;cursor:pointer;border:0;border-radius:14px;padding:14px 8px;font-weight:700;color:#fff;font-size:14px;transition:transform .1s,opacity .2s}
+button:active{transform:scale(.96)}
+button:disabled{opacity:.45;cursor:default}
+.b-ex{background:var(--ex)}.b-pp{background:var(--pp)}.b-pm{background:var(--pm)}.b-ne{background:var(--ne)}
+.b-go{background:var(--pp);width:100%;margin-top:8px;font-size:16px;padding:15px}
+button.right{outline:4px solid var(--ex);opacity:1}
+button.wrong{outline:4px solid var(--bad);opacity:1}
+#fb{min-height:64px;margin-top:12px;font-size:14px;line-height:1.45;padding:10px 12px;border-radius:12px;display:none}
+#fb.ok{display:block;background:rgba(46,158,107,.15)}
+#fb.ko{display:block;background:rgba(217,83,79,.15)}
+.big{font-size:56px;text-align:center;margin:6px 0}
+.center{text-align:center}
+.dots{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--line)}
+.dot.g{background:var(--ex)}.dot.r{background:var(--bad)}
+.hidden{display:none}
+.lvls .b-go:nth-child(1){background:var(--ex)}.lvls .b-go:nth-child(2){background:var(--pm)}.lvls .b-go:nth-child(3){background:var(--ne)}
+</style>
+</head>
+<body>
+<div class="credit">Dissenyat per: Eros Robledo</div>
+<main>
+
+<section class="card" id="s-start">
+  <h1>🔢 Classifica el decimal</h1>
+  <p class="sub">3 nivells · cada cop menys temps!</p>
+  <div class="legend">
+    <div style="border-color:var(--ex)"><b>Exacte</b><span>Acaba: 0,75</span></div>
+    <div style="border-color:var(--pp)"><b>Periòdic pur</b><span>Es repeteix ja: 0,333…</span></div>
+    <div style="border-color:var(--pm)"><b>Periòdic mixt</b><span>Abans de repetir: 0,8333…</span></div>
+    <div style="border-color:var(--ne)"><b>No exacte ni periòdic</b><span>Sense fi ni patró: π</span></div>
+  </div>
+  <p class="center" style="color:var(--mut);font-size:13px">Tria el nivell: 8 s · 5 s · 3 s<br>Encerta 3 de 5 per passar de nivell.</p>
+  <div class="lvls">
+    <button class="b-go" onclick="startLevel(0)">Nivell 1 · 8 s</button>
+    <button class="b-go" onclick="startLevel(1)">Nivell 2 · 5 s</button>
+    <button class="b-go" onclick="startLevel(2)">Nivell 3 · 3 s</button>
+  </div>
+</section>
+
+<section class="card hidden" id="s-game">
+  <div class="top"><span class="pill" id="lv">Nivell 1</span><span class="pill" id="sc">Pregunta 1/5</span></div>
+  <div class="bar"><div id="fill"></div></div>
+  <div id="tm">12</div>
+  <div id="num"></div>
+  <div class="opts">
+    <button class="b-ex" data-k="ex">Decimal exacte</button>
+    <button class="b-pp" data-k="pp">Periòdic pur</button>
+    <button class="b-pm" data-k="pm">Periòdic mixt</button>
+    <button class="b-ne" data-k="ne">No exacte ni periòdic</button>
+  </div>
+  <div id="fb"></div>
+  <button class="b-go hidden" id="next" onclick="nextQ()">Següent →</button>
+</section>
+
+<section class="card hidden" id="s-end">
+  <div class="big" id="e-ico"></div>
+  <h1 id="e-t"></h1>
+  <p class="center" id="e-p"></p>
+  <div class="dots" id="e-d"></div>
+  <button class="b-go" id="e-b"></button>
+  <button class="b-go" style="background:var(--mut)" onclick="show('s-start')">Triar nivell</button>
+</section>
+
+</main>
+<script>
+const NAMES={ex:"decimal exacte",pp:"periòdic pur",pm:"periòdic mixt",ne:"no exacte ni periòdic"};
+const LEVELS=[
+ {time:8,q:[
+  ["0,75","ex","Té 2 decimals i s'acaba."],["2,5","ex","S'acaba: només un decimal."],["0,125","ex","S'acaba després de 3 decimals."],
+  ["0,6666666…","pp","El 6 es repeteix des del primer decimal: 0,(6)."],["0,121212…","pp","El grup 12 es repeteix des del principi: 0,(12)."],["1,777777…","pp","El 7 es repeteix des del primer decimal."],
+  ["0,8333333…","pm","El 8 no es repeteix; el 3 sí: 0,8(3)."],["0,41666666…","pm","Hi ha 41 abans, i després es repeteix el 6."],
+  ["1,41421356…","ne","És √2: infinites xifres sense cap patró."],["3,14159265…","ne","És π: infinites xifres sense període."]]},
+ {time:5,q:[
+  ["0,0625","ex","S'acaba: 4 decimals."],["5,04","ex","S'acaba: 2 decimals."],["12,3456","ex","Té final, és exacte."],
+  ["2,454545…","pp","El període 45 comença just després de la coma."],["3,142857142857…","pp","El període 142857 es repeteix des del principi."],["0,090909…","pp","El període 09 es repeteix des del principi."],
+  ["0,58333333…","pm","Anteperíode 58, període 3."],["0,1232323…","pm","L'1 no es repeteix; el període és 23."],["0,94444444…","pm","Anteperíode 9, període 4."],
+  ["1,7320508…","ne","És √3: no té període."],["0,12345678910111213…","ne","Segueix un patró, però no és periòdic."],["0,101001000100001…","ne","Cada cop més zeros: no hi ha període."]]},
+ {time:3,q:[
+  ["0,875","ex","S'acaba després de 3 decimals."],["0,45","ex","S'acaba: només 2 decimals."],["0,325","ex","S'acaba: 3 decimals."],
+  ["0,444444…","pp","El 4 es repeteix des del primer decimal: 0,(4)."],["0,714285714285…","pp","El període 714285 comença just després de la coma."],["0,272727…","pp","El període 27 es repeteix des del principi."],
+  ["0,8333333…","pm","El 8 no es repeteix; el període és 3: 0,8(3)."],["0,4666666…","pm","Anteperíode 4, període 6."],["0,91666666…","pm","Anteperíode 91, període 6."],["0,0454545…","pm","Anteperíode 0, període 45."],
+  ["2,64575131…","ne","És √7: infinites xifres sense període."],["3,16227766…","ne","És √10: irracional."],["2,71828182…","ne","És el nombre e: irracional."]]}
+];
+const $=id=>document.getElementById(id);
+let L=0,qs=[],i=0,ok=0,res=[],t=0,tot=0,iv=null,locked=false;
+function show(id){["s-start","s-game","s-end"].forEach(s=>$(s).classList.toggle("hidden",s!==id))}
+function shuffle(a){return a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1])}
+function startLevel(l){L=l;qs=shuffle(LEVELS[l].q).slice(0,5);i=0;ok=0;res=[];show("s-game");$("lv").textContent="Nivell "+(l+1);loadQ()}
+function loadQ(){
+  locked=false;const q=qs[i];
+  $("num").textContent=q[0];$("sc").textContent="Pregunta "+(i+1)+"/5";
+  $("fb").className="";$("fb").style.display="";$("fb").textContent="";
+  $("next").classList.add("hidden");
+  document.querySelectorAll(".opts button").forEach(b=>{b.disabled=false;b.classList.remove("right","wrong")});
+  tot=LEVELS[L].time*10;t=tot;draw();clearInterval(iv);
+  iv=setInterval(()=>{t--;draw();if(t<=0){clearInterval(iv);answer(null)}},100);
+}
+function draw(){
+  $("tm").textContent=Math.ceil(t/10);
+  const p=t/tot*100;$("fill").style.width=p+"%";
+  $("fill").style.background=p>50?"var(--ex)":p>25?"var(--pm)":"var(--bad)";
+}
+function answer(k){
+  if(locked)return;locked=true;clearInterval(iv);
+  const q=qs[i],good=k===q[1];
+  if(good)ok++;res.push(good);
+  document.querySelectorAll(".opts button").forEach(b=>{b.disabled=true;
+    if(b.dataset.k===q[1])b.classList.add("right");
+    else if(b.dataset.k===k)b.classList.add("wrong")});
+  const fb=$("fb");fb.className=good?"ok":"ko";
+  fb.textContent=(good?"✅ Correcte! ":k===null?"⏰ S'ha acabat el temps! ":"❌ No és aquesta. ")+"És "+NAMES[q[1]]+". "+q[2];
+  $("next").textContent=i<4?"Següent →":"Veure resultat";
+  $("next").classList.remove("hidden");
+}
+function nextQ(){if(i<4){i++;loadQ()}else finish()}
+function finish(){
+  show("s-end");const pass=ok>=3,last=L===2;
+  $("e-d").innerHTML=res.map(r=>'<span class="dot '+(r?"g":"r")+'"></span>').join("");
+  $("e-ico").textContent=pass?(last?"🏆":"🎉"):"💪";
+  $("e-t").textContent=pass?(last?"Has completat tots els nivells!":"Nivell "+(L+1)+" superat!"):"Gairebé!";
+  $("e-p").textContent="Has encertat "+ok+" de 5."+(pass?(last?" Ets un/a expert/a en decimals.":" El següent nivell té menys temps ("+LEVELS[L+1].time+" s)."):" Necessites 3 encerts per passar.");
+  const b=$("e-b");
+  b.textContent=pass?(last?"Tornar a jugar":"Nivell "+(L+2)+" →"):"Tornar-ho a provar";
+  b.onclick=()=>pass?(last?startLevel(0):startLevel(L+1)):startLevel(L);
+}
+document.querySelectorAll(".opts button").forEach(b=>b.onclick=()=>answer(b.dataset.k));
+</script>
+</body>
+</html>
